@@ -1,0 +1,2 @@
+2026-09-09 16:14:10,896 INFO starting simulation run SIM-20260909T141410Z
+2026-09-09 16:14:10,921 INFO completed run: {'total': 20, 'pass': 13, 'fail': 6, 'error': 1, 'yield_excluding_errors': 0.6842105263157895, 'first_pass_yield': 0.65, 'failure_reasons': {'responsivity below minimum': 4, 'dark current above maximum': 2, 'repeatability CV above maximum': 2, 'current compliance tripped': 1, 'simulated VISA timeout during connect': 1}}

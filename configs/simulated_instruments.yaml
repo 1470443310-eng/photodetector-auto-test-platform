@@ -1,0 +1,18 @@
+smu:
+  resource_name: SIM::SMU::INSTR
+  model: virtual_smu
+  timeout_ms: 5000
+  max_abs_voltage_v: 10.0
+light_source:
+  resource_name: SIM::LIGHT::INSTR
+  model: virtual_light_source
+  max_power_w: 0.01
+profiles:
+  - normal
+  - high_dark_current
+  - low_responsivity
+  - noisy
+  - nonlinear
+  - open_circuit
+  - short_circuit
+  - communication_error

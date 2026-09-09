@@ -1,0 +1,16 @@
+[project]
+name = "photodetector-auto-test-platform"
+version = "0.1.0"
+description = "Simulated automated photodetector test and quality analysis demo"
+requires-python = ">=3.10"
+dependencies = ["PyYAML==6.0.2"]
+
+[project.optional-dependencies]
+dev = ["pytest==8.3.5"]
+ui = ["streamlit==1.43.2"]
+visa = ["PyVISA==1.14.1", "pyvisa-py==0.7.2", "pyvisa-sim==0.7.1"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"

@@ -1,0 +1,22 @@
+project: photodetector_auto_test
+plan_version: "1.0"
+random_seed: 20260909
+batch_size: 20
+voltage_sweep:
+  start_v: -5.0
+  stop_v: -0.1
+  step_v: 0.1
+  compliance_a: 0.001
+measurement:
+  reference_bias_v: -2.0
+  samples_per_point: 10
+  interval_s: 0.0
+  retry_count: 2
+illumination:
+  wavelength_nm: 850
+  optical_power_w: 0.001
+limits:
+  dark_current_max_a: 1.0e-8
+  responsivity_min_a_per_w: 0.35
+  responsivity_max_a_per_w: 0.75
+  repeatability_cv_max: 0.05

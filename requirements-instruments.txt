@@ -1,0 +1,4 @@
+# Install only when connecting real VISA instruments.
+PyVISA==1.14.1
+pyvisa-py==0.7.2
+pyvisa-sim==0.7.1
