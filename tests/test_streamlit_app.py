@@ -13,7 +13,9 @@ def test_main_page_shows_guide_and_inline_chinese_report():
     assert len(app.tabs) == 4
     assert len(app.get("html")) == 1
     assert len(app.get("download_button")) == 1
-    assert [metric.value for metric in app.metric[:4]] == ["20", "13", "6", "1"]
+    summary_values = [int(metric.value) for metric in app.metric[:4]]
+    assert summary_values[0] == 20
+    assert sum(summary_values[1:]) == 20
 
 
 def test_realistic_mode_changes_seed_on_each_browser_run():

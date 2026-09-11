@@ -21,6 +21,17 @@ detector:
 environment:
   nominal_temperature_c: 25.0
 simulation:
+  batch_profile_distribution:
+    normal: 0.68
+    high_dark_current: 0.07
+    low_responsivity: 0.07
+    noisy: 0.04
+    nonlinear: 0.04
+    unstable: 0.03
+    spectral_mismatch: 0.03
+    open_circuit: 0.01
+    short_circuit: 0.01
+    communication_error: 0.02
   manufacturing_variation:
     responsivity_relative_sigma: 0.04
     dark_current_log_sigma: 0.45

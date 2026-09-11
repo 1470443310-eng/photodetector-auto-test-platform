@@ -85,6 +85,20 @@ def run_dut(dut_id: str, profile: str, plan: dict[str, Any], seed: int) -> DutRe
 
 def run_batch(plan: dict[str, Any], profiles: list[str] | None = None) -> list[DutResult]:
     default = ["normal"] * 12 + ["high_dark_current", "low_responsivity", "noisy", "nonlinear", "open_circuit", "short_circuit", "communication_error", "normal"]
-    selected = profiles or default[: int(plan.get("batch_size", 20))]
     base_seed = int(plan.get("random_seed", 0))
+    batch_size = int(plan.get("batch_size", 20))
+    if profiles is not None:
+        selected = profiles
+    elif plan.get("simulation_run_mode") == "realistic_variation":
+        distribution = plan.get("simulation", {}).get("batch_profile_distribution", {"normal": 1.0})
+        names = list(distribution)
+        weights = [float(distribution[name]) for name in names]
+        if not names or any(weight < 0 for weight in weights) or sum(weights) <= 0:
+            raise ValueError("simulation.batch_profile_distribution must contain non-negative weights with a positive sum")
+        # Separate RNG stream keeps profile selection reproducible from the recorded
+        # batch seed without coupling it to any individual measurement sequence.
+        batch_rng = random.Random(base_seed ^ 0xB47C_2026)
+        selected = batch_rng.choices(names, weights=weights, k=batch_size)
+    else:
+        selected = default[:batch_size]
     return [run_dut(f"PD-{index:03d}", profile, plan, base_seed + index) for index, profile in enumerate(selected, 1)]

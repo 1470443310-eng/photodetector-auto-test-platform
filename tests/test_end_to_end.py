@@ -56,3 +56,17 @@ def test_teaching_fault_profiles_are_not_hidden_by_normal_variation():
     fault_profiles = ("high_dark_current", "low_responsivity", "noisy", "nonlinear", "open_circuit", "short_circuit")
     for index, profile in enumerate(fault_profiles, 1):
         assert run_dut(f"F{index}", profile, PLAN, 20260909 + index).status == "FAIL"
+
+def test_realistic_batches_vary_profile_and_quality_counts(tmp_path):
+    counts = set()
+    profile_sets = set()
+    for seed in range(100, 110):
+        varied_plan = load_test_plan(Path(__file__).parents[1] / "configs/default_test_plan.yaml")
+        varied_plan["random_seed"] = seed
+        varied_plan["simulation_run_mode"] = "realistic_variation"
+        from src.sequences.test_sequence import run_batch
+        results = run_batch(varied_plan)
+        counts.add(tuple(sum(result.status == status for result in results) for status in ("PASS", "FAIL", "ERROR")))
+        profile_sets.add(tuple(result.profile for result in results))
+    assert len(profile_sets) > 1
+    assert len(counts) > 1
