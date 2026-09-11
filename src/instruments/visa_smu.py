@@ -19,8 +19,8 @@ class VisaSMU(SourceMeasureUnit):
     def reset(self) -> None:
         self._write("*RST")
         self._write(f":SENS:CURR:PROT {self.compliance_a}")
-    def measure_current(self, voltage_v: float, optical_power_w: float = 0.0) -> float:
-        del optical_power_w
+    def measure_current(self, voltage_v: float, optical_power_w: float = 0.0, wavelength_nm: float = 850.0, elapsed_s: float = 0.0) -> float:
+        del optical_power_w, wavelength_nm, elapsed_s
         if abs(voltage_v) > self.max_abs_voltage_v:
             raise SafetyInterlockError("requested voltage exceeds configured safe limit")
         self._write(f":SOUR:VOLT {voltage_v}")

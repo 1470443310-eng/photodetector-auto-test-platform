@@ -14,9 +14,44 @@ measurement:
   retry_count: 2
 illumination:
   wavelength_nm: 850
-  optical_power_w: 0.001
+  optical_power_w: 7.5e-5
+detector:
+  reference_family: "通用硅PIN光电二极管（BPW34量级教学参考）"
+  active_area_cm2: 0.075
+environment:
+  nominal_temperature_c: 25.0
+simulation:
+  manufacturing_variation:
+    responsivity_relative_sigma: 0.04
+    dark_current_log_sigma: 0.45
+    shunt_resistance_log_sigma: 0.30
+    intrinsic_noise_relative_sigma: 0.20
+    peak_wavelength_sigma_nm: 10.0
+    temperature_sigma_c: 1.5
+  instrument:
+    gain_error_sigma: 0.002
+    zero_offset_sigma_a: 5.0e-12
+    noise_floor_a: 5.0e-15
+noise:
+  samples: 30
+  bandwidth_hz: 1.0
+linearity:
+  optical_powers_w: [1.0e-5, 2.5e-5, 4.0e-5, 5.5e-5, 7.5e-5, 1.0e-4]
+stability:
+  samples: 12
+  sample_interval_s: 5.0
+spectral_response:
+  wavelengths_nm: [450, 550, 650, 750, 850, 900, 950, 1000, 1050]
 limits:
   dark_current_max_a: 1.0e-8
   responsivity_min_a_per_w: 0.35
   responsivity_max_a_per_w: 0.75
   repeatability_cv_max: 0.05
+  noise_rms_max_a: 1.0e-11
+  nep_max_w_per_sqrt_hz: 1.0e-12
+  detectivity_min_jones: 1.0e10
+  linearity_r_squared_min: 0.98
+  linearity_max_error_fraction: 0.05
+  stability_drift_max_fraction: 0.03
+  stability_range_max_fraction: 0.08
+  target_spectral_ratio_min: 0.70

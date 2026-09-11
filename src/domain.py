@@ -8,6 +8,8 @@ class MeasurementPoint:
     voltage_v: float
     optical_power_w: float
     current_a: float
+    wavelength_nm: float | None = None
+    elapsed_s: float | None = None
 
 @dataclass
 class DutResult:

@@ -4,3 +4,5 @@ __pycache__/
 .pytest_cache/
 artifacts/*
 !artifacts/.gitkeep
+tools/cloudflared.exe
+.streamlit/secrets.toml
