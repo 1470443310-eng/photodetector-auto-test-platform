@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from html import escape
 from pathlib import Path
 from src.domain import DutResult
+from src.reporting.population import population_html
 from src.analysis.metric_catalog import FAILURE_EXPLANATIONS, PROFILE_NAMES, STATUS_NAMES, display_metric_name, metric_guide_rows
 
 def generate_html_report(path: str | Path, run_id: str, results: list[DutResult], summary: dict, plan: dict) -> Path:
@@ -33,6 +34,7 @@ body{{font-family:Arial,'Microsoft YaHei',sans-serif;max-width:1150px;margin:32p
 <h1>光电探测器自动化测试与批次质量报告</h1><div>运行编号：{escape(run_id)}　|　追溯种子：{plan.get('random_seed')}　|　模式：{'现实波动' if plan.get('simulation_run_mode') == 'realistic_variation' else '教学复现'}</div><p class='notice'><b>真实性声明：</b>本报告采用参考真实量级的教学仿真模型，仅用于验证自动测试流程，不代表某个具体型号或真实器件测量结果。</p>
 <div class='cards'><div class='card'>总数<br><b>{summary['total']}</b></div><div class='card'>PASS<br><b>{summary['pass']}</b></div><div class='card'>FAIL<br><b>{summary['fail']}</b></div><div class='card'>ERROR<br><b>{summary['error']}</b></div><div class='card'>有效测试良率<br><b>{summary['yield_excluding_errors']:.1%}</b></div><div class='card'>批次异常<br><b>{summary.get('anomaly_count', 0)}</b></div></div>
 <h2>质量结论</h2><p>系统已完成数据清洗、参数计算、规格判定、失败归因和批次异常筛查。FAIL 表示测量有效但至少一个指标越限；ERROR 表示测试系统未形成有效器件结论；批次异常表示相对同批器件存在统计离群，需要复核。</p>
+{population_html(results, plan, run_id)}
 <h2>DUT 综合结果</h2><div style='overflow-x:auto'><table><thead><tr><th>DUT</th><th>故障配置</th><th>状态</th><th>异常</th><th>暗电流/A</th><th>响应度/A·W⁻¹</th><th>噪声RMS/A</th><th>NEP/W·Hz⁻½</th><th>D*/Jones</th><th>线性R²</th><th>重复性CV</th><th>稳定性漂移</th><th>光谱峰值/nm</th><th>失败原因</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div>
 <h2>批次异常器件</h2><table><thead><tr><th>DUT</th><th>状态</th><th>异常分数</th><th>贡献指标</th></tr></thead><tbody>{anomalies}</tbody></table>
 <h2>失败原因 Pareto</h2><ul>{reasons}</ul><h3>失败代表什么</h3><ul>{reason_help}</ul>

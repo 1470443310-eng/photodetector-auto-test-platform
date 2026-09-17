@@ -3,8 +3,10 @@ from pathlib import Path
 import hmac
 import os
 import uuid
+import json
 import streamlit as st
 from src.pipeline import execute
+from src.reporting.population import browser_report
 from src.analysis.metric_catalog import (
     FAILURE_EXPLANATIONS, METRIC_CATALOG, PROFILE_NAMES, STATUS_NAMES,
     display_metric_name, metric_assessment, metric_guide_rows,
@@ -117,7 +119,10 @@ if run_requested:
 
 outcome = st.session_state.get("outcome")
 if not outcome:
-    st.info("点击左侧按钮启动完整测试链路。命令行入口为 scripts/run_demo.py。")
+    st.info("点击左侧按钮生成本批数据，即可查看数据来源、8项全样本分布图、三态数量分布和可下载质量报告。")
+    st.subheader("数据从哪里来？")
+    st.write("本平台的数据由简化硅 PIN 光电二极管模型与虚拟仪器生成，包含制造离散、温度、噪声与故障注入；未采集真实器件，也未使用公开实测数据集。BPW34 等厂商资料仅提供量级参考，阈值为教学假设。")
+    st.caption("教学复现模式使用固定种子；现实波动模式按配置概率抽样。两者均为仿真，故障占比不代表真实制造良率。")
     st.stop()
 
 summary = outcome["summary"]
@@ -161,7 +166,14 @@ st.download_button(
     file_name=Path(outcome["report"]).name,
     mime="text/html",
 )
-st.html(report_html)
+st.html(browser_report(report_html))
+with st.expander("下载原始数据与生效配置，复核图表"):
+    for key, label in [("measurements_csv", "下载测量点 CSV"), ("summary_csv", "下载全样本指标 CSV"), ("json", "下载结构化结果 JSON")]:
+        artifact = Path(outcome["paths"][key])
+        st.download_button(label, artifact.read_bytes(), file_name=artifact.name,
+                           mime="application/json" if key == "json" else "text/csv")
+    st.download_button("下载生效配置与种子", json.dumps(outcome["plan"], ensure_ascii=False, indent=2),
+                       file_name=f"{outcome['run_id']}_plan.json", mime="application/json")
 
 overview_tab, curves_tab, batch_tab, guide_tab = st.tabs(["探测器综合判定", "单颗曲线与指标", "批次质量分析", "指标学习说明"])
 

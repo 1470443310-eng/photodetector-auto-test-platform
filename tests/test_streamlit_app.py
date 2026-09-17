@@ -12,7 +12,11 @@ def test_main_page_shows_guide_and_inline_chinese_report():
     assert not app.exception
     assert len(app.tabs) == 4
     assert len(app.get("html")) == 1
-    assert len(app.get("download_button")) == 1
+    assert len(app.get("download_button")) == 5
+    report = app.get("html")[0].proto.body
+    assert "数据集来源与复现" in report
+    assert "全样本指标分布与规格对照" in report
+    assert report.count("data:image/svg+xml;base64,") == 9
     summary_values = [int(metric.value) for metric in app.metric[:4]]
     assert summary_values[0] == 20
     assert sum(summary_values[1:]) == 20
